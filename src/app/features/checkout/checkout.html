@@ -1,0 +1,555 @@
+<app-navbar></app-navbar>
+<div class="checkout-container">
+
+  <!-- Header -->
+  <header class="checkout-header">
+    <div class="header-inner page-inner">
+      <button class="back-btn" routerLink="/cart" aria-label="Go back to menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Menu</span>
+      </button>
+
+      <div class="secure-tag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Secure Checkout</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Empty State -->
+  <div *ngIf="cartItems.length === 0" class="empty-state page-inner">
+    <div class="empty-icon-wrap">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+    </div>
+    <h2>Your cart is empty</h2>
+    <p>Please add some delicious food items to your cart first!</p>
+    <button class="menu-btn" routerLink="/getmenu">Go to Menu</button>
+  </div>
+
+  <!-- Stepper / Progress Bar (1 -> 2 -> 3) -->
+  <div *ngIf="cartItems.length > 0" class="checkout-stepper-container page-inner">
+    <div class="checkout-stepper">
+      <!-- Step 1 -->
+      <div class="step-item" [class.active]="!isLoggedIn" [class.completed]="isLoggedIn">
+        <div class="step-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="step-label">1. Account</span>
+      </div>
+
+      <!-- Connecting line 1 -> 2 -->
+      <div class="step-connector" [class.completed]="isLoggedIn">
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-item" [class.active]="isLoggedIn && !selectedAddress" [class.completed]="isLoggedIn && selectedAddress">
+        <div class="step-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <span class="step-label">2. Delivery Address</span>
+      </div>
+
+      <!-- Connecting line 2 -> 3 -->
+      <div class="step-connector" [class.completed]="isLoggedIn && selectedAddress">
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-item" [class.active]="isLoggedIn && selectedAddress">
+        <div class="step-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <span class="step-label">3. Payment</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Workspace -->
+  <div *ngIf="cartItems.length > 0" class="checkout-workspace page-inner">
+
+    <!-- LEFT COLUMN: Address selection -->
+    <main class="left-column">
+
+      <!-- ACCOUNT CARD -->
+      <div class="section-card account-section-card">
+        <div class="section-title-row">
+          <div class="title-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h3>Account Verification</h3>
+        </div>
+
+        <!-- Logged-in State -->
+        <div *ngIf="isLoggedIn" class="account-verified-state">
+          <div class="success-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div class="account-details">
+            <span class="status-label">Logged In</span>
+            <span class="user-name">{{ loggedInUsername }}</span>
+            <span class="user-phone">+91 {{ loggedInPhone }}</span>
+          </div>
+          <button class="change-account-btn" (click)="logout()">Change Account</button>
+        </div>
+
+        <!-- Logged-out State: Inline Verification Flow -->
+        <div *ngIf="!isLoggedIn" class="account-login-flow">
+          <p class="description-text">To place your order now, verify your phone number.</p>
+
+          <!-- Step 1: Input Phone Number
+          <div *ngIf="!showOtpModal" class="phone-input-row">
+            <div class="phone-input-container">
+              <span class="country-code">+91</span>
+              <input 
+                type="tel" 
+                class="premium-input phone-input" 
+                placeholder="Enter 10-digit phone number" 
+                [(ngModel)]="phoneNumber" 
+                maxlength="10" 
+                (keyup.enter)="phoneNumber.length === 10 && checkUser()"
+              />
+            </div>
+            <button 
+              class="send-otp-btn" 
+              (click)="checkUser()" 
+              [disabled]="isSendingOtp || phoneNumber.length !== 10"
+            >
+              <span *ngIf="!isSendingOtp">Send OTP</span>
+              <span *ngIf="isSendingOtp">Sending...</span>
+            </button>
+          </div> -->
+
+
+          <!-- Step 1: Phone input (always shown first) -->
+          <div *ngIf="!showOtpModal && userExists === null" class="phone-input-row-wrapper">
+            <div class="phone-input-row">
+              <div class="phone-input-container">
+                <span class="country-code">+91</span>
+                <input 
+                  type="tel" 
+                  class="premium-input phone-input" 
+                  placeholder="Enter 10-digit phone number" 
+                  [(ngModel)]="phoneNumber" 
+                  maxlength="10" 
+                  (keyup.enter)="phoneNumber.length === 10 && checkUser()"
+                />
+              </div>
+              <button 
+                class="send-otp-btn" 
+                (click)="checkUser()" 
+                [disabled]="isSendingOtp || phoneNumber.length !== 10"
+              >
+                <span *ngIf="!isSendingOtp">Send OTP</span>
+                <span *ngIf="isSendingOtp">Sending...</span>
+              </button>
+            </div>
+            <p class="helper-text-small">
+              Don't have an account? Enter your number and you can register as a guest on the next step.
+            </p>
+          </div>
+
+          <!-- New user: Name + Email + Phone + Register -->
+          <div *ngIf="!showOtpModal && userExists === false" class="register-form-container">
+            <p class="description-text">Looks like you're new here! Let's create your account.</p>
+
+            <div class="register-form">
+              <div class="form-group-premium">
+                <label class="form-label-premium">Phone Number</label>
+                <div class="phone-input-container">
+                  <span class="country-code">+91</span>
+                  <input 
+                    type="tel" 
+                    class="premium-input phone-input" 
+                    placeholder="Enter 10-digit phone number" 
+                    [(ngModel)]="phoneNumber" 
+                    maxlength="10"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group-premium">
+                <label class="form-label-premium">Full Name</label>
+                <input 
+                  type="text" 
+                  class="premium-input form-field-premium" 
+                  placeholder="Your full name" 
+                  [(ngModel)]="newUserName" 
+                />
+              </div>
+
+              <div class="form-group-premium">
+                <label class="form-label-premium">Email Address (Optional)</label>
+                <input 
+                  type="email" 
+                  class="premium-input form-field-premium" 
+                  placeholder="Email address" 
+                  [(ngModel)]="newUserEmail" 
+                />
+              </div>
+
+              <div class="otp-error-message" *ngIf="registerError">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>{{ registerError }}</span>
+              </div>
+
+              <div class="register-actions">
+                <button 
+                  class="register-btn" 
+                  (click)="registerGuest()" 
+                  [disabled]="isRegistering || !newUserName.trim() || phoneNumber.length !== 10"
+                >
+                  <span *ngIf="!isRegistering">Register & Continue</span>
+                  <span *ngIf="isRegistering">Creating account...</span>
+                </button>
+                
+                <button class="back-to-login-link" (click)="userExists = null">
+                  ← Back to Login
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Existing user (or just-registered): Send OTP -->
+          <div *ngIf="!showOtpModal && userExists === true" class="existing-user-row">
+            <p class="description-text">Welcome back! Verify with OTP to continue.</p>
+
+            <div class="form-group-premium">
+                <label class="form-label-premium">Phone Number</label>
+                <div class="phone-input-container">
+                  <span class="country-code">+91</span>
+                  <input 
+                    type="tel" 
+                    class="premium-input phone-input" 
+                    placeholder="Enter 10-digit phone number" 
+                    [(ngModel)]="phoneNumber" 
+                    maxlength="10"
+                  />
+                </div>
+              </div>
+
+            <div class="existing-user-actions">
+              <button 
+                class="send-otp-btn" 
+                (click)="sendOtp()" 
+                [disabled]="isSendingOtp"
+              >
+                <span *ngIf="!isSendingOtp">Send OTP</span>
+                <span *ngIf="isSendingOtp">Sending...</span>
+              </button>
+              <!-- <button class="change-phone-link" (click)="userExists = null">
+                Change Number
+              </button> -->
+            </div>
+          </div>
+
+          <!-- Step 2: Input OTP (Inline) -->
+          <div *ngIf="showOtpModal" class="otp-input-row">
+            <div class="otp-status-info">
+              <span>OTP sent to <strong>+91 {{ phoneNumber }}</strong></span>
+              <button class="change-phone-link" (click)="closeOtpModal()">Change Number</button>
+            </div>
+
+            <div class="otp-form-group">
+              <div class="otp-input-container">
+                <input 
+                  type="text" 
+                  class="premium-input otp-input" 
+                  placeholder="Enter 6-digit OTP" 
+                  [(ngModel)]="enteredOtp" 
+                  maxlength="6"
+                  (keyup.enter)="enteredOtp.length === 6 && verifyOtp()"
+                />
+              </div>
+              <button 
+                class="verify-otp-btn" 
+                (click)="verifyOtp()" 
+                [disabled]="isVerifying || enteredOtp.length !== 6"
+              >
+                <span *ngIf="!isVerifying">Verify OTP</span>
+                <span *ngIf="isVerifying">Verifying...</span>
+              </button>
+            </div>
+
+            <div class="otp-error-message" *ngIf="otpError">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>{{ otpError }}</span>
+            </div>
+
+            <div class="otp-actions">
+              <span class="resend-text">Didn't receive OTP?</span>
+              <button class="resend-otp-btn" (click)="resendOtp()" [disabled]="isSendingOtp">
+                Resend OTP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDRESS SELECTION CARD -->
+      <div class="section-card">
+        <div class="section-title-row">
+          <div class="title-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <h3>Select Delivery Address</h3>
+        </div>
+
+        <div class="addresses-grid">
+          <!-- Saved Address Card -->
+          <div *ngFor="let addr of addresses" class="address-card" [class.selected]="addr === selectedAddress"
+            (click)="selectAddress(addr)">
+
+            <div class="card-header">
+              <div class="address-type-badge">
+                <!-- Icon based on type -->
+                <svg *ngIf="addr.type === 'home'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <svg *ngIf="addr.type === 'work'" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                <svg *ngIf="addr.type !== 'home' && addr.type !== 'work'" width="12" height="12" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <span>{{ addr.type }}</span>
+              </div>
+              <span class="radio-indicator"></span>
+            </div>
+
+            <div class="card-body">
+              <p class="address-text">{{ addr.address }}</p>
+              <p class="landmark-text">{{ addr.landmark }}, {{ addr.city }} - {{ addr.pincode }}</p>
+
+              <div class="phone-row">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                  </path>
+                </svg>
+                <span>{{ addr.phone }}</span>
+              </div>
+            </div>
+
+            <!-- Active Tag -->
+            <div *ngIf="addr === selectedAddress" class="delivering-badge">
+              ✓ Delivering Here
+            </div>
+          </div>
+
+          <!-- Add Address Trigger Card -->
+          <div class="add-address-card" (click)="openSidebar()">
+            <div class="add-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h4>Add New Address</h4>
+            <p>Save home, office or other delivery addresses</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- RIGHT COLUMN: Order summary box and Bill details -->
+    <aside class="right-column">
+
+      <div class="order-summary-box">
+        <h3>Order Summary</h3>
+
+        <!-- Cart Items list in a box -->
+        <div class="cart-items-box">
+          <div *ngFor="let item of cartItems" class="summary-item-row">
+
+            <div class="item-main-details">
+              <div class="item-img-small">
+                <img [src]="item.food.imageUrl || 'assets/default-food.jpg'" [alt]="item.food.name" />
+              </div>
+              <div class="item-desc">
+                <span class="item-name">{{ item.food.name }}</span>
+                <span class="item-price-unit">₹{{ item.food.price }}</span>
+              </div>
+            </div>
+
+            <!-- Stepper and Actions -->
+            <div class="item-action-group">
+              <div class="stepper">
+                <button (click)="decrement(item)" aria-label="Decrease quantity">−</button>
+                <span class="quantity-num">{{ item.quantity }}</span>
+                <button (click)="increment(item)" aria-label="Increase quantity">+</button>
+              </div>
+
+              <span class="item-line-total">₹{{ item.food.price * item.quantity }}</span>
+
+              <button class="delete-btn" (click)="removeItem(item)" aria-label="Remove item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bill Details Section inside the same box -->
+        <div class="bill-details-section">
+          <h4>Bill Details</h4>
+
+          <div class="bill-row">
+            <span class="label">Item Total</span>
+            <span class="val">₹{{ total }}</span>
+          </div>
+
+          <div class="bill-row">
+            <span class="label">Delivery Fee</span>
+            <span class="val success">FREE</span>
+          </div>
+
+          <div class="bill-row">
+            <span class="label">Govt Taxes & Service Charges</span>
+            <span class="val">₹0</span>
+          </div>
+
+          <hr class="bill-divider" />
+
+          <div class="bill-row total-row">
+            <span class="label">Grand Total / To Pay</span>
+            <span class="val">₹{{ total }}</span>
+          </div>
+        </div>
+
+        <!-- Action pay CTA button -->
+        <button class="pay-btn" (click)="proceedToPayment()">
+          <span>Proceed to Payment</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>
+
+<!-- 🧾 SIDEBAR / DRAWER FOR ADDING ADDRESS -->
+<div class="sidebar-overlay" *ngIf="showSidebar" (click)="closeSidebar()">
+  <div class="sidebar-container" (click)="$event.stopPropagation()">
+    <div class="sidebar-header">
+      <h3>Add Delivery Address</h3>
+      <button class="close-sidebar-btn" (click)="closeSidebar()" aria-label="Close sidebar">✕</button>
+    </div>
+
+    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="sidebar-form">
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input id="phone" placeholder="10-digit mobile number" formControlName="phone"
+          [class.error]="addressForm.get('phone')?.touched && addressForm.get('phone')?.invalid" />
+        <small class="error-text" *ngIf="addressForm.get('phone')?.touched && addressForm.get('phone')?.invalid">
+          Please enter a valid 10-digit phone number.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Flat, House no., Building, Apartment, Street</label>
+        <textarea id="address" placeholder="Complete Address" formControlName="address"
+          [class.error]="addressForm.get('address')?.touched && addressForm.get('address')?.invalid"></textarea>
+        <small class="error-text" *ngIf="addressForm.get('address')?.touched && addressForm.get('address')?.invalid">
+          Address is required.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="landmark">Landmark (Optional)</label>
+        <input id="landmark" placeholder="e.g. Near school, behind hospital" formControlName="landmark" />
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input id="city" placeholder="City" formControlName="city"
+            [class.error]="addressForm.get('city')?.touched && addressForm.get('city')?.invalid" />
+        </div>
+        <div class="form-group">
+          <label for="pincode">Pincode</label>
+          <input id="pincode" placeholder="Pincode" formControlName="pincode"
+            [class.error]="addressForm.get('pincode')?.touched && addressForm.get('pincode')?.invalid" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Save Address As</label>
+        <div class="address-type-selector">
+          <button type="button" [class.active]="addressForm.get('type')?.value === 'home'"
+            (click)="addressForm.patchValue({type:'home'})">
+            Home
+          </button>
+          <button type="button" [class.active]="addressForm.get('type')?.value === 'work'"
+            (click)="addressForm.patchValue({type:'work'})">
+            Work
+          </button>
+          <button type="button" [class.active]="addressForm.get('type')?.value === 'other'"
+            (click)="addressForm.patchValue({type:'other'})">
+            Other
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="save-btn">Save Address</button>
+        <button type="button" class="cancel-btn" (click)="closeSidebar()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

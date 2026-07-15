@@ -1,0 +1,105 @@
+.vendor-signup-page {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 100px;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.signup-card h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  color: #222;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.checklist-box {
+  background: #fff7f0;
+  border: 1px solid #ffe0c2;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.checklist-box h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #b25e00;
+}
+
+.checklist-box ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.8;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.error-msg {
+  color: #e53935;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.success-msg {
+  color: #2ecc71;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button[type="submit"]:disabled {
+  background: #ffab91;
+  cursor: not-allowed;
+}

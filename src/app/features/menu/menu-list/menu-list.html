@@ -1,0 +1,242 @@
+<div class="page">
+
+  <!-- Header -->
+  <app-navbar></app-navbar>
+
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <!-- Decorative Background -->
+    <div class="hero-bg-decor">
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+      <div class="hero-blob hero-blob-3"></div>
+      <div class="hero-grid-overlay"></div>
+    </div>
+
+ 
+    <div class="hero-content page-inner">
+      <span class="hero-tagline">
+        <span class="tagline-dot"></span>
+        Satisfy Your Cravings
+        <span class="tagline-dot"></span>
+      </span>
+      <h1 class="hero-title">Delicious Foods, <br><span class="hero-highlight">Delivered To Your Door</span></h1>
+      <p class="hero-subtitle">Craving something? Get it delivered fast from nearby kitchens.</p>
+
+      <!-- Stats Row -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="stat-number">200+</span>
+          <span class="stat-label">Menu Items</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="stat-number">50K+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="stat-number">4.9★</span>
+          <span class="stat-label">Average Rating</span>
+        </div>
+      </div>
+      <!-- Search Box -->
+      <div class="search-box">
+        <div class="search-icon-wrap">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <input 
+          #searchBox
+          type="text" 
+          placeholder="Search for your favorite dishes..." 
+          [value]="searchQuery"
+          (input)="onSearch(searchBox.value)"
+        />
+        <button 
+          *ngIf="searchQuery" 
+          class="clear-search-btn" 
+          (click)="onSearch(''); searchBox.value = ''"
+          aria-label="Clear search">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Wave Divider -->
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="var(--bg-color)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Categories Rail -->
+  <nav class="category-rail page-inner" *ngIf="categories.length">
+    <button
+      *ngFor="let cat of categories"
+      class="category-chip"
+      [class.active]="cat === activeCategory"
+      (click)="setCategory(cat)">
+      <span class="chip-dot"></span>
+      {{ cat }}
+    </button>
+  </nav>
+
+  <!-- Empty State -->
+  <div class="empty-state page-inner" *ngIf="filteredMenu.length === 0">
+    <div class="empty-icon-wrap">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M8 15h8M9 9h.01M15 9h.01"/>
+      </svg>
+    </div>
+    <h2>No delicious items found 🍽️</h2>
+    <p>Try modifying your search queries or selecting another category.</p>
+    <button class="reset-filters-btn" (click)="onSearch(''); setCategory('All'); searchBox.value = ''">
+      Show All Dishes
+    </button>
+  </div>
+
+  <!-- Menu Grid -->
+  <main class="menu-grid page-inner" *ngIf="filteredMenu.length > 0">
+    <article class="food-card" *ngFor="let food of filteredMenu">
+      
+      <!-- Food Image with Badges -->
+      <div class="food-image-wrap">
+        <img 
+          [src]="food.imageUrl || 'assets/default-food.jpg'" 
+          [alt]="food.name"
+          class="food-image"
+          loading="lazy"
+        />
+        <span class="category-badge">{{ food.category }}</span>
+      </div>
+
+      <!-- Food Details -->
+      <div class="food-body">
+        <div class="food-meta-row">
+          <div class="rating-badge">
+            <svg class="star-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span>{{ food.rating }}</span>
+          </div>
+          <div class="prep-badge">
+            <svg class="clock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>{{ food.prepTime }}</span>
+          </div>
+        </div>
+        
+        <h3 class="food-title">{{ food.name }}</h3>
+        <p class="food-description">{{ food.description || 'Delicious freshly prepared gourmet specialty.' }}</p>
+      </div>
+
+      <!-- Food Action (Price and CTA) -->
+      <div class="food-action">
+        <div class="price-section">
+          <span class="currency">₹</span>
+          <span class="price-val">{{ food.price }}</span>
+        </div>
+
+        <div class="cta-wrapper">
+          <!-- Add Button -->
+          <button 
+            *ngIf="getQuantity(food.id) === 0"
+            class="add-btn"
+            (click)="addToCart(food)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add
+          </button>
+
+          <!-- Stepper -->
+          <div *ngIf="getQuantity(food.id) > 0" class="stepper">
+            <button (click)="decrement(food)" aria-label="Decrease quantity">−</button>
+            <span class="quantity-num">{{ getQuantity(food.id) }}</span>
+            <button (click)="increment(food)" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="footer-inner page-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-row">
+            <div class="footer-logo-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span class="footer-brand-name">ZappEat</span>
+          </div>
+          <p class="footer-tagline">Delicious food crafted by master chefs, delivered fresh to your doorstep with care.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Company</h4>
+          <a routerLink="/about">About Us</a>
+          <a routerLink="/contact">Contact</a>
+          <a routerLink="/terms">Terms & Conditions</a>
+          <a routerLink="/privacy">Privacy Policy</a>
+        </div>
+
+        <div class="footer-links">
+          <h4>For Partners</h4>
+          <a routerLink="/vendor-signup" class="partner-link">
+            List Your Restaurant
+          </a>
+          <a routerLink="/delivery-signup">
+            Join as Delivery Partner
+          </a>
+          <a routerLink="/getmenu">Browse Menu</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 ZappEat. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+</div>
+

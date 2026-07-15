@@ -1,0 +1,281 @@
+<div class="payment-container">
+
+  <!-- ───── STICKY HEADER ───── -->
+  <header class="pay-header">
+    <div class="pay-header-inner page-inner">
+      <button class="back-link" (click)="goBack()" aria-label="Go back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <div class="title-wrap">
+        <h2>Payment</h2>
+        <span class="step-badge">Step 2 of 2</span>
+      </div>
+
+      <div class="secure-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <span>Secure</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ───── MAIN GRID ───── -->
+  <div class="pay-grid page-inner">
+
+    <!-- ══════════════════════════════════ LEFT COLUMN ══════════════════════════════════ -->
+    <div class="pay-left">
+
+      <!-- 📍 DELIVERY ADDRESS -->
+      <div class="pay-card" id="address-section">
+        <div class="pay-card-header">
+          <div class="card-icon-wrap address-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Delivering To</h3>
+            <p class="card-subtitle">Your order arrives here</p>
+          </div>
+          <div class="verified-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Confirmed
+          </div>
+        </div>
+
+        <div class="address-block">
+          <p class="address-main">{{ selectedAddress?.address }}</p>
+          <p class="address-sub">{{ selectedAddress?.city }} — {{ selectedAddress?.pincode }}</p>
+          <div class="address-phone">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56A16 16 0 0 0 15.44 16.09l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z">
+            </path>
+            </svg>
+            <span>{{ selectedAddress?.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 💳 PAYMENT METHODS -->
+      <div class="pay-card" id="payment-methods-section">
+        <div class="pay-card-header no-border">
+          <div class="card-icon-wrap payment-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Payment Method</h3>
+            <p class="card-subtitle">Choose how you want to pay</p>
+          </div>
+        </div>
+
+        <div class="method-list">
+
+          <!-- COD Option -->
+          <div class="method-card" [class.selected]="openSection === 'COD'" (click)="toggleSection('COD')"
+            id="cod-option" role="button" tabindex="0">
+            <div class="method-radio">
+              <div class="radio-outer" [class.active]="openSection === 'COD'">
+                <div class="radio-inner"></div>
+              </div>
+            </div>
+            <div class="method-icon cod-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <div class="method-info">
+              <span class="method-name">Cash on Delivery</span>
+              <span class="method-desc">Pay when your order arrives</span>
+            </div>
+            <div class="method-tag">Popular</div>
+          </div>
+
+          <!-- COD Expand Panel -->
+          <div class="method-expand" [class.open]="openSection === 'COD'">
+            <div class="expand-inner">
+              <div class="cod-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Keep exact change ready. Our delivery partner accepts cash.
+              </div>
+              <button class="place-order-btn" id="cod-place-order"
+                (click)="placeOrder(); $event.stopPropagation()">
+                <span>Place Order · ₹{{ totalAmount }}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- UPI Option -->
+          <div class="method-card" [class.selected]="openSection === 'ONLINE'" (click)="toggleSection('ONLINE')"
+            id="online-option" role="button" tabindex="0">
+            <div class="method-radio">
+              <div class="radio-outer" [class.active]="openSection === 'ONLINE'">
+                <div class="radio-inner"></div>
+              </div>
+            </div>
+            <div class="method-icon upi-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+            </div>
+            <div class="method-info">
+              <span class="method-name">UPI / Card</span>
+              <span class="method-desc">Pay via UPI, Debit or Credit card</span>
+            </div>
+            <div class="method-tag new-tag">Instant</div>
+          </div>
+
+          <!-- ONLINE Expand Panel -->
+          <div class="method-expand" [class.open]="openSection === 'ONLINE'">
+            <div class="expand-inner">
+              <div class="upi-options">
+                <div class="upi-chip active-upi">
+                  <span>📱</span> GPay
+                </div>
+                <div class="upi-chip">
+                  <span>💜</span> PhonePe
+                </div>
+                <div class="upi-chip">
+                  <span>🅿️</span> Paytm
+                </div>
+                <div class="upi-chip">
+                  <span>💳</span> Card
+                </div>
+              </div>
+              <div class="upi-input-wrap">
+                <label class="upi-label">UPI ID</label>
+                <input class="upi-input" type="text" placeholder="yourname@upi" id="upi-id-input" />
+              </div>
+              <button class="place-order-btn" id="online-place-order"
+                (click)="placeOrder(); $event.stopPropagation()">
+                <span>Pay ₹{{ totalAmount }}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════ RIGHT COLUMN ══════════════════════════════════ -->
+    <aside class="pay-right">
+
+      <!-- 🛒 ORDER SUMMARY -->
+      <div class="pay-card summary-card" id="order-summary-section">
+        <div class="pay-card-header no-border">
+          <div class="card-icon-wrap summary-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Order Summary</h3>
+            <p class="card-subtitle">{{ cartItems.length }} item{{ cartItems.length !== 1 ? 's' : '' }}</p>
+          </div>
+        </div>
+
+        <!-- Items List -->
+        <div class="summary-items">
+          <div *ngFor="let item of cartItems" class="summary-item">
+            <div class="sum-item-left">
+              <span class="sum-qty-badge">{{ item.quantity }}×</span>
+              <span class="sum-name">{{ item.food.name }}</span>
+            </div>
+            <span class="sum-price">₹{{ item.food.price * item.quantity }}</span>
+          </div>
+        </div>
+
+        <!-- Bill Breakdown -->
+        <hr class="bill-sep" />
+        <div class="bill-rows">
+          <div class="bill-row">
+            <span class="b-label">Item Total</span>
+            <span class="b-val">₹{{ totalAmount }}</span>
+          </div>
+          <div class="bill-row">
+            <span class="b-label">Delivery</span>
+            <span class="b-val free">FREE 🎉</span>
+          </div>
+          <div class="bill-row">
+            <span class="b-label">Taxes</span>
+            <span class="b-val">₹0</span>
+          </div>
+        </div>
+
+        <hr class="bill-sep" />
+
+        <div class="total-row">
+          <span class="total-label">Grand Total</span>
+          <span class="total-amount">₹{{ totalAmount }}</span>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+          <div class="trust-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Safe Checkout
+          </div>
+          <div class="trust-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            Fast Delivery
+          </div>
+          <div class="trust-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            100% Fresh
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+</div>

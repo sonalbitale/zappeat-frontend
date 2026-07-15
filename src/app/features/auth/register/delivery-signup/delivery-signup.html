@@ -1,0 +1,26 @@
+<div class="signup-container">
+  <h2>Become a Delivery Partner 🛵</h2>
+
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+    <input type="text" placeholder="Full Name" formControlName="username" />
+
+    <input type="email" placeholder="Email" formControlName="email" />
+
+    <input type="password" placeholder="Password" formControlName="password" />
+
+    <input type="text" placeholder="Phone Number" formControlName="phone" />
+
+    <select formControlName="vehicleType">
+      <option value="">Select Vehicle Type</option>
+      <option value="BIKE">Bike</option>
+      <option value="SCOOTY">Scooty</option>
+      <option value="CYCLE">Cycle</option>
+    </select>
+
+    <input type="text" placeholder="Vehicle Number" formControlName="vehicleNumber" />
+
+    <button type="submit">Register</button>
+
+  </form>
+</div>

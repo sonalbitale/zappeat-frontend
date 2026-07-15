@@ -1,0 +1,212 @@
+<div class="track-page" *ngIf="!loading && order">
+
+  <!-- ───── HEADER ───── -->
+  <header class="track-header">
+    <div class="track-header-inner page-inner">
+      <button class="back-link" (click)="goToMenu()" aria-label="Go back to menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Menu</span>
+      </button>
+
+      <div class="header-center">
+        <h2>Track Order</h2>
+        <span class="order-id-tag">#{{ order.orderid }}</span>
+      </div>
+
+      <div class="status-pill" [class]="'status-' + order.status?.toLowerCase()">
+        {{ order.status?.replace('_', ' ') }}
+      </div>
+    </div>
+  </header>
+
+  <!-- ───── CONTENT ───── -->
+  <div class="track-content page-inner">
+
+    <!-- ── Status Timeline ── -->
+    <div class="track-card" id="status-tracker-card">
+      <div class="track-card-header">
+        <div class="tc-icon order-ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h3 class="tc-title">Live Tracking</h3>
+          <p class="tc-sub">Placed on {{ order.date | date: 'MMM d, y · h:mm a' }}</p>
+        </div>
+      </div>
+
+      <div class="stepper">
+        <div *ngFor="let step of statusSteps; let i = index; let last = last"
+          class="stepper-step"
+          [class.step-done]="isStepActive(step)"
+          [class.step-current]="isCurrentStep(step)">
+
+          <div class="step-left">
+            <div class="step-dot">
+              <svg *ngIf="isStepActive(step) && !isCurrentStep(step)" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <div *ngIf="isCurrentStep(step)" class="step-pulse"></div>
+            </div>
+            <div class="step-connector" *ngIf="!last"></div>
+          </div>
+
+          <div class="step-body">
+            <span class="step-label">{{ step | titlecase }}</span>
+            <span class="step-sub">{{ getStepDesc(step) }}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Delivery Partner ── -->
+    <div class="track-card partner-card" id="delivery-partner-card" *ngIf="isStepActive('OUT_FOR_DELIVERY')">
+      <div class="partner-avatar">🏍️</div>
+      <div class="partner-info">
+        <span class="partner-label">Your Delivery Partner</span>
+        <span class="partner-name">Ravi Kumar</span>
+        <span class="partner-eta">Arriving in ~10 min</span>
+      </div>
+      <button class="call-btn" id="call-partner-btn" aria-label="Call delivery partner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56A16 16 0 0 0 15.44 16.09l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z">
+          </path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── Assigning Partner (if not yet out for delivery) ── -->
+    <div class="track-card assigning-card" *ngIf="!isStepActive('OUT_FOR_DELIVERY')" id="assigning-partner-card">
+      <div class="assigning-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="assigning-text">
+        <span class="assigning-title">Assigning a delivery partner</span>
+        <span class="assigning-sub">A partner will be assigned once your order is packed 🏍️</span>
+      </div>
+      <div class="dot-loader">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- ── Order Items ── -->
+    <div class="track-card" id="order-items-card">
+      <div class="track-card-header">
+        <div class="tc-icon items-ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </div>
+        <h3 class="tc-title">Order Items</h3>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let item of order.items" class="item-row">
+          <div class="ir-left">
+            <span class="ir-qty">{{ item.quanity }}×</span>
+            <span class="ir-name">{{ item.foodName }}</span>
+          </div>
+          <span class="ir-price">₹{{ item.price }}</span>
+        </div>
+      </div>
+
+      <hr class="item-sep" />
+
+      <div class="bill-breakdown">
+        <div class="bb-row">
+          <span class="bb-label">Item Total</span>
+          <span class="bb-val">₹{{ order.totalprice }}</span>
+        </div>
+        <div class="bb-row">
+          <span class="bb-label">Delivery Fee</span>
+          <span class="bb-val free">FREE</span>
+        </div>
+        <div class="bb-row total-bb">
+          <span class="bb-label">Total Paid</span>
+          <span class="bb-val grand">₹{{ order.totalprice }}</span>
+        </div>
+      </div>
+
+      <!-- Payment badge -->
+      <div class="payment-tag">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        Paid via {{ order.paymentMethod }}
+      </div>
+    </div>
+
+    <!-- ── Delivery Address ── -->
+    <div class="track-card" id="track-address-card">
+      <div class="track-card-header">
+        <div class="tc-icon addr-ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <h3 class="tc-title">Delivering To</h3>
+      </div>
+
+      <div class="addr-block">
+        <p class="addr-main">{{ order.deliveryaddress?.address }}</p>
+        <p class="addr-sub">{{ order.deliveryaddress?.city }} · {{ order.deliveryaddress?.pincode }}</p>
+        <p class="addr-landmark" *ngIf="order.deliveryaddress?.landmark">
+          📍 Landmark: {{ order.deliveryaddress?.landmark }}
+        </p>
+        <p class="addr-phone">📞 {{ order.deliveryaddress?.phone }}</p>
+      </div>
+    </div>
+
+    <!-- ── Action Buttons ── -->
+    <div class="track-actions" id="track-action-buttons">
+      <button class="track-btn-primary" (click)="goToMenu()" id="track-back-to-menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Order More Food
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── Loading ── -->
+<div class="state-screen" *ngIf="loading">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+  </div>
+  <p>Loading your order...</p>
+</div>
+
+<!-- ── Error ── -->
+<div class="state-screen" *ngIf="error">
+  <div class="error-icon">⚠️</div>
+  <p class="error-msg">{{ error }}</p>
+  <button class="retry-btn" (click)="retryFetch()" id="retry-btn">Retry</button>
+</div>

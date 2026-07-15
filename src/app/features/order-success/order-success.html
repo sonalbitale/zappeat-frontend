@@ -1,0 +1,159 @@
+<div class="success-page" *ngIf="order">
+
+  <!-- ─── HERO CARD (Domino's style centred card) ─── -->
+  <div class="hero-section">
+    <div class="hero-card">
+
+      <!-- Confetti dots (decorative) -->
+      <div class="confetti-dots" aria-hidden="true">
+        <span class="dot d1"></span>
+        <span class="dot d2"></span>
+        <span class="dot d3"></span>
+        <span class="dot d4"></span>
+        <span class="dot d5"></span>
+        <span class="dot d6"></span>
+        <span class="dot d7"></span>
+        <span class="dot d8"></span>
+      </div>
+
+      <!-- Green checkmark -->
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white"
+          stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <h1 class="success-heading">Order Placed Successfully!</h1>
+      <p class="order-confirm-text">
+        Your order <strong>#{{ order.orderid }}</strong> has been confirmed
+      </p>
+
+      <!-- ETA box -->
+      <div class="eta-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <div>
+          <span class="eta-label">Estimated Delivery Time</span>
+          <span class="eta-time">25–35 minutes</span>
+        </div>
+      </div>
+
+      <!-- Three action buttons -->
+      <div class="action-btns" id="success-action-buttons">
+        <button class="btn-track" (click)="trackOrder()" id="track-order-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Track Order
+        </button>
+        <button class="btn-outline" (click)="goToOrders()" id="view-orders-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          View Orders
+        </button>
+        <button class="btn-outline" (click)="goToHome()" id="go-home-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Go to Home
+        </button>
+      </div>
+
+      <p class="email-note">
+        We've sent the order details to your email and phone.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── HUNGRY FOR MORE BANNER ─── -->
+  <div class="hungry-banner" id="hungry-for-more-banner">
+    <div class="banner-inner page-inner">
+      <div class="banner-left">
+        <span class="pizza-emoji">🍕</span>
+        <div>
+          <p class="banner-title">Hungry for more?</p>
+          <p class="banner-sub">Continue exploring our delicious menu.</p>
+        </div>
+      </div>
+      <button class="view-menu-btn" (click)="goToHome()" id="view-menu-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+        View Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── RECOMMENDED FOR YOU ─── -->
+  <div class="recommended-section page-inner" *ngIf="recommended.length > 0" id="recommended-section">
+    <div class="rec-header">
+      <h2 class="rec-title">🔥 Recommended for you</h2>
+      <button class="view-all-btn" (click)="goToHome()" id="view-all-btn">View All ›</button>
+    </div>
+
+    <div class="rec-scroll">
+      <div *ngFor="let food of recommended" class="rec-card" id="rec-card-{{ food.id }}">
+
+        <!-- Food image -->
+        <div class="rec-img-wrap">
+          <div class="veg-badge" [class.non-veg]="food.category === 'Non-Veg'">
+            <div class="veg-dot"></div>
+          </div>
+          <img
+            [src]="food.imageUrl || 'assets/default-food.jpg'"
+            [alt]="food.name"
+            class="rec-img"
+          />
+        </div>
+
+        <!-- Food info -->
+        <div class="rec-body">
+          <h4 class="rec-name">{{ food.name }}</h4>
+          <p class="rec-desc">{{ food.description || food.category }}</p>
+          <div class="rec-footer">
+            <span class="rec-price">₹{{ food.price }}</span>
+            <button
+              class="add-cart-btn"
+              [class.added]="isAdded(food.id)"
+              (click)="addToCart(food)"
+              [id]="'add-to-cart-' + food.id"
+              [attr.aria-label]="'Add ' + food.name + ' to cart'">
+              <span *ngIf="!isAdded(food.id)">Add to Cart +</span>
+              <span *ngIf="isAdded(food.id)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Added!
+              </span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- No order fallback -->
+<div class="no-order" *ngIf="!order">
+  <p>No order found. Redirecting...</p>
+</div>

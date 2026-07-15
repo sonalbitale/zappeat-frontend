@@ -1,0 +1,40 @@
+<h2>Available Orders</h2>
+
+<div *ngFor="let order of waitingOrders" class="order-card">
+
+  <p><b>Order ID:</b> {{order.id}}</p>
+
+  <p><b>Restaurant:</b> {{order.restaurant.restaurantName}}</p>
+
+  <p><b>Address:</b> {{order.deliveryAddress.address}}, {{order.deliveryAddress.city}}</p>
+
+  <p><b>Status:</b> {{order.orderstatus}}</p>
+
+  <button (click)="acceptOrder(order.id)">Accept</button>
+
+</div>
+
+<h2>My Deliveries</h2>
+<div *ngFor="let order of myOrders" class="order-card">
+  <p><b>Order ID:</b> {{order.id}}</p>
+  <p><b>Restaurant:</b> {{order.restaurant.restaurantName}}</p>
+  <p><b>Address:</b> {{order.deliveryAddress.address}}, {{order.deliveryAddress.city}}</p>
+  <p><b>Status:</b> {{order.orderstatus}}</p>
+
+  <button *ngIf="order.orderstatus === 'ASSIGNED'"
+          (click)="pickupOrder(order.id)"
+          [disabled]="isProcessing">
+    Picked Up — Start Delivery
+  </button>
+
+  <button *ngIf="order.orderstatus === 'OUT_FOR_DELIVERY'"
+          (click)="deliverOrder(order.id)"
+          [disabled]="isProcessing">
+    Mark as Delivered
+  </button>
+</div>
+
+
+<!-- <google-map height="400px" width="100%" [center]="center" [zoom]="15">
+  <map-marker [position]="markerPosition"></map-marker>
+</google-map> -->

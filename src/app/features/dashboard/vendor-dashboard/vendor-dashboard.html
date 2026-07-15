@@ -1,0 +1,75 @@
+<div class="vendor-dashboard">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-name">Tomato & Thyme</span>
+      <span class="brand-sub">Vendor Panel</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active">Dashboard</a>
+      <a class="nav-item" (click)="goToAddFood()">Add Food Item</a>
+      <a class="nav-item" routerLink="/vendor/orders">Orders</a>
+      <a class="nav-item disabled">Analytics <span class="badge">soon</span></a>
+    </nav>
+
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </aside>
+
+  <main class="dashboard-main">
+<header class="dashboard-header">
+  <h2>Welcome back, {{ restaurant?.owner?.username }} 👋</h2>
+  <p *ngIf="restaurant">
+    {{ restaurant.restaurantName }} —
+    <span [class.approved]="restaurant.approved" [class.pending]="!restaurant.approved">
+      {{ restaurant.approved ? '✅ Verified' : '⏳ Pending Approval' }}
+    </span>
+  </p>
+</header>
+
+    <section class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Total Food Items</span>
+        <span class="stat-value">{{ foodItems.length }}</span>
+      </div>
+      <div class="stat-card muted">
+        <span class="stat-label">Total Orders</span>
+        <span class="stat-value">—</span>
+      </div>
+      <div class="stat-card muted">
+        <span class="stat-label">Revenue</span>
+        <span class="stat-value">—</span>
+      </div>
+    </section>
+
+    <section class="menu-section">
+      <div class="section-header">
+        <h3>My Menu Items</h3>
+        <button class="add-btn" (click)="goToAddFood()">+ Add Food Item</button>
+      </div>
+
+      <div class="loading" *ngIf="loading">Loading your menu...</div>
+      <div class="error" *ngIf="error">{{ error }}</div>
+
+      <div class="empty" *ngIf="!loading && foodItems.length === 0">
+        No food items yet. Add your first dish!
+      </div>
+
+      <div class="food-grid" *ngIf="!loading && foodItems.length > 0">
+        <div class="food-card" *ngFor="let item of foodItems">
+          <img [src]="item.imageUrl" [alt]="item.name" />
+          <div class="food-info">
+            <h4>{{ item.name }}</h4>
+            <p class="category">{{ item.category }}</p>
+            <p class="price">₹{{ item.price }}</p>
+          </div>
+          <div class="food-actions">
+            <button (click)="editFood(item.id)">Edit</button>
+            <button class="delete" (click)="deleteFood(item.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

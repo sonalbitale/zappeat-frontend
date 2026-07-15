@@ -1,0 +1,57 @@
+<div class="orders-page">
+
+  <h2>Incoming Orders</h2>
+
+  <div class="loading" *ngIf="loading">Loading orders...</div>
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="empty" *ngIf="!loading && orders.length === 0">No orders yet.</div>
+
+  <div class="orders-grid" *ngIf="!loading && orders.length > 0">
+    <div class="order-card" *ngFor="let order of orders">
+
+      <div class="order-header">
+        <h3>Order #{{ order.id }}</h3>
+        <span class="status-badge" [ngClass]="order.orderstatus.toLowerCase()">
+          {{ order.orderstatus }}
+        </span>
+      </div>
+
+      <p class="customer-name">👤 {{ order.user?.username }}</p>
+
+      <div class="item-list">
+        <div class="item-row" *ngFor="let item of order.orderitems">
+          <span>{{ item.fooditem.name }} x{{ item.quantity }}</span>
+          <span>₹{{ item.price }}</span>
+        </div>
+      </div>
+
+      <div class="order-footer">
+        <span class="total">Total: ₹{{ order.totalprice }}</span>
+        <span class="payment">{{ order.paymentMethod }}</span>
+      </div>
+
+      <!-- Action buttons based on status -->
+      <div class="actions" *ngIf="order.orderstatus === 'PLACED'">
+        <button class="accept-btn" (click)="acceptOrder(order.id)">Accept</button>
+        <button class="reject-btn" (click)="openRejectBox(order.id)">Reject</button>
+      </div>
+
+      <div class="actions" *ngIf="order.orderstatus === 'PREPARING'">
+        <button class="ready-btn" [disabled]="order.orderstatus !== 'PREPARING'" (click)="markReady(order.id)">Mark as Ready</button>
+      </div>
+
+      <div class="reject-box" *ngIf="rejectingOrderId === order.id">
+        <textarea
+          [(ngModel)]="rejectReason"
+          placeholder="Reason for rejection (e.g. item out of stock)"
+        ></textarea>
+        <div class="reject-actions">
+          <button class="confirm-reject" (click)="confirmReject(order.id)">Confirm Reject</button>
+          <button class="cancel-reject" (click)="cancelRejectBox()">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

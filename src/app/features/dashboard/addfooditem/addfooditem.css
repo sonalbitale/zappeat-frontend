@@ -1,0 +1,87 @@
+.add-food-page {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 100px;
+  background: #f7f7f8;
+  min-height: 100vh;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #ff5722;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.form-card h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.preview img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.error-msg { color: #e53935; font-size: 13px; margin-bottom: 12px; }
+.success-msg { color: #2ecc71; font-size: 13px; margin-bottom: 12px; }
+
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button[type="submit"]:disabled {
+  background: #ffab91;
+  cursor: not-allowed;
+}

@@ -1,0 +1,52 @@
+<div class="add-food-page">
+  <div class="form-card">
+
+    <button class="back-btn" (click)="goBack()">← Back to Dashboard</button>
+
+    <h2>Add New Food Item</h2>
+    <p class="subtitle">Add a dish to your restaurant menu</p>
+
+    <form (ngSubmit)="onSubmit()" #foodForm="ngForm">
+
+      <div class="form-group">
+        <label>Dish Name</label>
+        <input type="text" name="name" [(ngModel)]="formData.name" placeholder="e.g. Chicken Tandoori" required />
+      </div>
+
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input type="number" name="price" [(ngModel)]="formData.price" placeholder="e.g. 280" required />
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" [(ngModel)]="formData.category" required>
+          <option value="" disabled selected>Select category</option>
+          <option value="Starters">Starters</option>
+          <option value="Main Course">Main Course</option>
+          <option value="Tandoor">Tandoor</option>
+          <option value="Biryani">Biryani</option>
+          <option value="Desserts">Desserts</option>
+          <option value="Beverages">Beverages</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" name="imageUrl" [(ngModel)]="formData.imageUrl" placeholder="https://..." required />
+      </div>
+
+      <div class="preview" *ngIf="formData.imageUrl">
+        <img [src]="formData.imageUrl" alt="preview" onerror="this.style.display='none'" />
+      </div>
+
+      <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+      <div class="success-msg" *ngIf="successMsg">{{ successMsg }}</div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Adding...' : 'Add Food Item' }}
+      </button>
+
+    </form>
+  </div>
+</div>

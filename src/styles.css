@@ -1,1 +1,140 @@
-/* You can add global styles to this file, and also import other style files */
+/* ═══════════════════════════════════════════════════
+   🎨 GLOBAL DESIGN SYSTEM — Tomato & Thyme
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* ── Core Brand Colors ── */
+  --primary-color: #ff5e36;
+  --primary-dark: #e84e28;
+  --primary-light: #ff8a65;
+  --primary-gradient: linear-gradient(135deg, #ff8a00 0%, #ff5e36 50%, #ff4444 100%);
+  --primary-gradient-hover: linear-gradient(135deg, #ff9b1a 0%, #ff6f47 50%, #ff5555 100%);
+  --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* ── Status Colors ── */
+  --success-color: #00c851;
+  --warning-color: #ffbb33;
+  --danger-color: #ff4444;
+
+  /* ── Backgrounds ── */
+  --bg-color: #f8f9fb;
+  --bg-warm: #fef8f5;
+  --surface-color: #ffffff;
+
+  /* ── Glass ── */
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-dark: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-border-subtle: rgba(0, 0, 0, 0.04);
+
+  /* ── Text ── */
+  --text-main: #1a1d26;
+  --text-secondary: #3d4150;
+  --text-muted: #6b7280;
+  --text-light: #9ca3af;
+
+  /* ── Shadows ── */
+  --card-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 16px 40px -8px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 20px 40px -15px rgba(255, 94, 54, 0.18);
+  --navbar-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  --glow-primary: 0 0 20px rgba(255, 94, 54, 0.15);
+
+  /* ── Radii ── */
+  --border-radius-xs: 6px;
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-xl: 32px;
+
+  /* ── Typography ── */
+  --font-family: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-display: 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ── Transitions ── */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-fast: 0.2s var(--ease-spring);
+  --transition-normal: 0.3s var(--ease-spring);
+  --transition-slow: 0.5s var(--ease-spring);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: var(--font-family);
+}
+
+/* ── Premium Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ── Global Utilities ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
