@@ -92,8 +92,8 @@
     <main class="left-column">
 
       <!-- ACCOUNT CARD -->
-      <div class="section-card account-section-card">
-        <div class="section-title-row">
+      <div class="section-card account-section-card" *ngIf="!isLoggedIn">
+        <div class="section-title-row"  >
           <div class="title-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -104,7 +104,7 @@
         </div>
 
         <!-- Logged-in State -->
-        <div *ngIf="isLoggedIn" class="account-verified-state">
+        <!-- <div *ngIf="isLoggedIn" class="account-verified-state">
           <div class="success-indicator">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
@@ -116,7 +116,7 @@
             <span class="user-phone">+91 {{ loggedInPhone }}</span>
           </div>
           <button class="change-account-btn" (click)="logout()">Change Account</button>
-        </div>
+        </div> -->
 
         <!-- Logged-out State: Inline Verification Flow -->
         <div *ngIf="!isLoggedIn" class="account-login-flow">
