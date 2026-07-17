@@ -19,7 +19,6 @@
       <!-- Stats Counters -->
       <div class="stats-row">
         <div class="stat-card" (click)="selectTab('available')" [class.active-stat]="activeTab === 'available'">
-          <div class="stat-icon icon-available">💼</div>
           <div class="stat-info">
             <span class="stat-number">{{ waitingOrders.length }}</span>
             <span class="stat-label">Available Runs</span>
@@ -27,20 +26,20 @@
         </div>
 
         <div class="stat-card" (click)="selectTab('my-deliveries')" [class.active-stat]="activeTab === 'my-deliveries'">
-          <div class="stat-icon icon-active">🏍️</div>
+          <!-- <div class="stat-icon icon-active">🏍️</div> -->
           <div class="stat-info">
             <span class="stat-number">{{ myOrders.length }}</span>
             <span class="stat-label">Active Deliveries</span>
           </div>
         </div>
 
-        <div class="stat-card stat-status-card">
+        <!-- <div class="stat-card stat-status-card">
           <div class="stat-icon icon-status">🟢</div>
           <div class="stat-info">
             <span class="stat-number text-success">Online</span>
             <span class="stat-label">System Status</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </header>
 
