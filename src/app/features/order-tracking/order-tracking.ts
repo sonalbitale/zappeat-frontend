@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Order } from '../../core/services/order.service';
 import { CommonModule, TitleCasePipe } from '@angular/common';
+    import { interval, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-order-tracking',
@@ -15,8 +17,10 @@ export class OrderTracking implements OnInit {
   loading: boolean = true;
   error: string = '';
   orderId: number = 0;
+  pollSub!: Subscription;
 
-  statusSteps: string[] = ['PENDING', 'CONFIRMED', 'PREPARING', 'READY_FOR_PICKUP', 'ASSIGNED', 'OUT_FOR_DELIVERY', 'DELIVERED',];
+
+  statusSteps: string[] = ['PLACED','PREPARING', 'READY_FOR_PICKUP', 'ASSIGNED', 'OUT_FOR_DELIVERY', 'DELIVERED',];
 
   stepDescriptions: Record<string, string> = {
     PLACED:           'Order received & confirmed',
@@ -40,8 +44,11 @@ export class OrderTracking implements OnInit {
       return;
     }
 
+  this.pollSub = interval(5000).subscribe(() => {
     this.fetchOrder(this.orderId);
-  }
+  });
+}
+  
 
   fetchOrder(id: number) {
     this.loading = true;
@@ -50,7 +57,11 @@ export class OrderTracking implements OnInit {
       next: (res: any) => {
         this.order = res;
         console.log("order to track",this.order);
+
         this.loading = false;
+         if (['DELIVERED','CANCELLED','REJECTED'].includes(this.order.status)) {
+      this.pollSub.unsubscribe(); //  stop polling
+    }
         this.cdr.detectChanges();
       },
       error: (err: any) => {
@@ -71,12 +82,12 @@ export class OrderTracking implements OnInit {
 
   isStepActive(step: string): boolean {
     if (!this.order) return false;
-    return this.getStepIndex(step) <= this.getStepIndex(this.order.orderstatus);
+    return this.getStepIndex(step) <= this.getStepIndex(this.order.status);
   }
 
   isCurrentStep(step: string): boolean {
     if (!this.order) return false;
-    return this.order.orderstatus === step;
+    return this.order.status === step;
   }
 
   getStepDesc(step: string): string {
@@ -84,6 +95,9 @@ export class OrderTracking implements OnInit {
   }
 
   goToMenu() {
-    this.router.navigate(['/getmenu']);
+    this.router.navigate(['/menu']);
   }
+  ngOnDestroy() {
+  this.pollSub?.unsubscribe();
+}
 }

@@ -1,40 +1,248 @@
-<h2>Available Orders</h2>
+<div class="page-container">
+  <!-- Header Navbar -->
+  <app-navbar></app-navbar>
 
-<div *ngFor="let order of waitingOrders" class="order-card">
+  <!-- Main Content Area -->
+  <div class="delivery-dashboard page-inner">
+    
+    <!-- Hero Header -->
+    <header class="dashboard-header">
+      <div class="header-main">
+        <span class="header-tagline">
+          <span class="tagline-dot"></span>
+          Delivery Partner Console
+        </span>
+        <h1 class="header-title">Your Delivery <span class="highlight">Portal</span></h1>
+        <p class="header-subtitle">Manage, track, and complete your food delivery runs in real time.</p>
+      </div>
 
-  <p><b>Order ID:</b> {{order.id}}</p>
+      <!-- Stats Counters -->
+      <div class="stats-row">
+        <div class="stat-card" (click)="selectTab('available')" [class.active-stat]="activeTab === 'available'">
+          <div class="stat-icon icon-available">💼</div>
+          <div class="stat-info">
+            <span class="stat-number">{{ waitingOrders.length }}</span>
+            <span class="stat-label">Available Runs</span>
+          </div>
+        </div>
 
-  <p><b>Restaurant:</b> {{order.restaurant.restaurantName}}</p>
+        <div class="stat-card" (click)="selectTab('my-deliveries')" [class.active-stat]="activeTab === 'my-deliveries'">
+          <div class="stat-icon icon-active">🏍️</div>
+          <div class="stat-info">
+            <span class="stat-number">{{ myOrders.length }}</span>
+            <span class="stat-label">Active Deliveries</span>
+          </div>
+        </div>
 
-  <p><b>Address:</b> {{order.deliveryAddress.address}}, {{order.deliveryAddress.city}}</p>
+        <div class="stat-card stat-status-card">
+          <div class="stat-icon icon-status">🟢</div>
+          <div class="stat-info">
+            <span class="stat-number text-success">Online</span>
+            <span class="stat-label">System Status</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  <p><b>Status:</b> {{order.orderstatus}}</p>
+    <!-- Tab Navigation Bar -->
+    <div class="tabs-bar">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'available'" 
+        (click)="selectTab('available')">
+        Available Orders ({{ waitingOrders.length }})
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'my-deliveries'" 
+        (click)="selectTab('my-deliveries')">
+        My Deliveries ({{ myOrders.length }})
+      </button>
+      <div class="tab-indicator" [class.shift-right]="activeTab === 'my-deliveries'"></div>
+    </div>
 
-  <button (click)="acceptOrder(order.id)">Accept</button>
+    <!-- Active Tab content -->
+    <div class="tab-content-wrapper">
+      
+      <!-- TAB 1: AVAILABLE ORDERS -->
+      <div class="tab-pane animate-fade-in" *ngIf="activeTab === 'available'">
+        <div class="section-title-wrap">
+          <h2 class="section-title">Jobs Awaiting Dispatch</h2>
+          <p class="section-subtitle">Accept jobs nearby. Deliver quickly to make more money.</p>
+        </div>
 
+        <div class="empty-state" *ngIf="waitingOrders.length === 0">
+          <div class="empty-icon">🎉</div>
+          <h3>All caught up!</h3>
+          <p>There are no incoming orders waiting for dispatch right now. Check back in a few minutes.</p>
+        </div>
+
+        <div class="orders-grid" *ngIf="waitingOrders.length > 0">
+          <div *ngFor="let order of waitingOrders" class="order-card">
+            <div class="card-header">
+              <span class="order-tag">Run #{{ order.id }}</span>
+              <span class="status-badge status-ready">Ready for Pickup</span>
+            </div>
+
+            <div class="card-body">
+              <div class="location-timeline">
+                <div class="loc-step pickup">
+                  <span class="loc-marker">🏪</span>
+                  <div class="loc-details">
+                    <span class="loc-label">Pickup Point</span>
+                    <span class="loc-name">{{ order.restaurant?.restaurantName }}</span>
+                  </div>
+                </div>
+
+                <div class="loc-step dropoff">
+                  <span class="loc-marker">📍</span>
+                  <div class="loc-details">
+                    <span class="loc-label">Delivery Destination</span>
+                    <span class="loc-name">{{ order.deliveryAddress?.address }}, {{ order.deliveryAddress?.city }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item breakdown -->
+              <div class="order-items-summary" *ngIf="order.orderitems && order.orderitems.length > 0">
+                <span class="items-title">Items in Bag:</span>
+                <div class="items-list">
+                  <div class="item-pill" *ngFor="let item of order.orderitems">
+                    {{ item.fooditem?.name }} <span class="qty">x{{ item.quantity }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="payout-info">
+                <span class="payout-amt">₹{{ order.totalprice }}</span>
+                <span class="pay-method badge-payment">{{ order.paymentMethod || 'Online' }}</span>
+              </div>
+              <button 
+                class="btn btn-primary" 
+                (click)="acceptOrder(order.id)"
+                [disabled]="isProcessing">
+                Accept 
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: MY DELIVERIES -->
+      <div class="tab-pane animate-fade-in" *ngIf="activeTab === 'my-deliveries'">
+        <div class="section-title-wrap">
+          <h2 class="section-title">Your Current Route Runs</h2>
+          <p class="section-subtitle">Keep customers updated. Mark progress as you move.</p>
+        </div>
+
+        <div class="empty-state" *ngIf="myOrders.length === 0">
+          <div class="empty-icon">🏍️</div>
+          <h3>No Active Deliveries</h3>
+          <p>You have not claimed any deliveries yet. Head over to the "Available Orders" tab to get started!</p>
+        </div>
+
+        <div class="orders-grid" *ngIf="myOrders.length > 0">
+          <div *ngFor="let order of myOrders" class="order-card active-run">
+            <div class="card-header">
+              <span class="order-tag">Run #{{ order.id }}</span>
+              <span class="status-badge" [ngClass]="{
+                'status-assigned': order.orderstatus === 'ASSIGNED',
+                'status-transit': order.orderstatus === 'OUT_FOR_DELIVERY'
+              }">
+                {{ order.orderstatus === 'ASSIGNED' ? 'Assigned to You' : 'In Transit' }}
+              </span>
+            </div>
+
+            <div class="card-body">
+              <div class="customer-info-bar">
+                <span class="avatar-icon">👤</span>
+                <div class="customer-details">
+                  <span class="c-label">Customer Contact</span>
+                  <span class="c-name">{{ order.user?.username || 'Customer' }}</span>
+                </div>
+              </div>
+
+              <div class="location-timeline">
+                <div class="loc-step pickup">
+                  <span class="loc-marker">🏪</span>
+                  <div class="loc-details">
+                    <span class="loc-label">Pickup Point</span>
+                    <span class="loc-name">{{ order.restaurant?.restaurantName }}</span>
+                  </div>
+                </div>
+
+                <div class="loc-step dropoff">
+                  <span class="loc-marker">📍</span>
+                  <div class="loc-details">
+                    <span class="loc-label">Delivery Destination</span>
+                    <span class="loc-name">{{ order.deliveryAddress?.address }}, {{ order.deliveryAddress?.city }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item breakdown -->
+              <div class="order-items-summary" *ngIf="order.orderitems && order.orderitems.length > 0">
+                <span class="items-title">Items in Bag:</span>
+                <div class="items-list">
+                  <div class="item-pill" *ngFor="let item of order.orderitems">
+                    {{ item.fooditem?.name }} <span class="qty">x{{ item.quantity }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Collapsible Map Route -->
+              <div class="map-collapse-section" *ngIf="selectedOrderIdForMap === order.id">
+                <div class="map-header">
+                  <span>🗺️ Live Routing Route</span>
+                  <span class="map-sub">GPS Broadcasting Active</span>
+                </div>
+                <div class="map-container-box">
+                  <google-map height="260px" width="100%" [center]="center" [zoom]="zoom">
+                    <map-marker [position]="markerPosition"></map-marker>
+                  </google-map>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer actions-footer">
+              <div class="payout-info">
+                <span class="payout-amt">₹{{ order.totalprice }}</span>
+                <span class="pay-method badge-payment">{{ order.paymentMethod || 'Online' }}</span>
+              </div>
+              
+              <div class="btn-group">
+                <!-- Toggle Map Tracking -->
+                <button 
+                  class="btn btn-secondary" 
+                  (click)="toggleMap(order.id)">
+                  {{ selectedOrderIdForMap === order.id ? 'Hide Map' : 'View Map' }}
+                </button>
+
+                <!-- Actions Based on Status -->
+                <button 
+                  *ngIf="order.orderstatus === 'ASSIGNED'"
+                  class="btn btn-action btn-pickup" 
+                  (click)="pickupOrder(order.id)"
+                  [disabled]="isProcessing">
+                   Pick Up & Start
+                </button>
+
+                <button 
+                  *ngIf="order.orderstatus === 'OUT_FOR_DELIVERY'"
+                  class="btn btn-action btn-deliver" 
+                  (click)="deliverOrder(order.id)"
+                  [disabled]="isProcessing">
+                  ✅ Delivered
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 </div>
-
-<h2>My Deliveries</h2>
-<div *ngFor="let order of myOrders" class="order-card">
-  <p><b>Order ID:</b> {{order.id}}</p>
-  <p><b>Restaurant:</b> {{order.restaurant.restaurantName}}</p>
-  <p><b>Address:</b> {{order.deliveryAddress.address}}, {{order.deliveryAddress.city}}</p>
-  <p><b>Status:</b> {{order.orderstatus}}</p>
-
-  <button *ngIf="order.orderstatus === 'ASSIGNED'"
-          (click)="pickupOrder(order.id)"
-          [disabled]="isProcessing">
-    Picked Up — Start Delivery
-  </button>
-
-  <button *ngIf="order.orderstatus === 'OUT_FOR_DELIVERY'"
-          (click)="deliverOrder(order.id)"
-          [disabled]="isProcessing">
-    Mark as Delivered
-  </button>
-</div>
-
-
-<!-- <google-map height="400px" width="100%" [center]="center" [zoom]="15">
-  <map-marker [position]="markerPosition"></map-marker>
-</google-map> -->

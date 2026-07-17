@@ -28,11 +28,16 @@ export class Navbar {
     private router: Router,
     private cartService: Cart
   ) {
+this.router.events.subscribe(event => {
+  if (event instanceof NavigationEnd) {
 
-      this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      this.isCheckoutPage = event.urlAfterRedirects === '/checkout';
-    }
+    const hiddenRoutes = ['/checkout', '/payment', 'delivery/incomingorders'];
+
+    this.isCheckoutPage = hiddenRoutes.some(route =>
+      event.urlAfterRedirects.includes(route)
+    );
+
+  }
   });
   }
 
