@@ -29,6 +29,15 @@ export class OrderTracking implements OnInit {
     DELIVERED:        'Delivered! Enjoy your meal 🎉',
   };
 
+
+  statusLabels: Record<string, string> = {
+  PLACED: 'Placed',
+  PREPARING: 'Preparing',
+  READY_FOR_PICKUP: 'Ready for Pickup',
+  ASSIGNED: 'Assigned',
+  OUT_FOR_DELIVERY: 'Out for Delivery',
+  DELIVERED: 'Delivered',
+};
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -49,7 +58,7 @@ export class OrderTracking implements OnInit {
   });
 }
   
-
+  
   fetchOrder(id: number) {
     this.loading = true;
     this.error = '';
@@ -72,6 +81,9 @@ export class OrderTracking implements OnInit {
     });
   }
 
+  getStatusLabel(status: string): string {
+  return this.statusLabels[status] ?? status;
+}
   retryFetch() {
     this.fetchOrder(this.orderId);
   }

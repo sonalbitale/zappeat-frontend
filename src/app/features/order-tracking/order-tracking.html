@@ -18,8 +18,9 @@
       </div>
 
       <div class="status-pill" [class]="'status-' + order.status?.toLowerCase()">
-        {{ order.status?.replace('_', ' ') }}
+        {{ getStatusLabel(order.status) }}
       </div>
+
     </div>
   </header>
 
@@ -60,7 +61,8 @@
           </div>
 
           <div class="step-body">
-            <span class="step-label">{{ step | titlecase }}</span>
+            <!-- <span class="step-label">{{ step | titlecase }}</span> -->
+            <span class="step-label">{{ getStatusLabel(step) }}</span>
             <span class="step-sub">{{ getStepDesc(step) }}</span>
           </div>
 
