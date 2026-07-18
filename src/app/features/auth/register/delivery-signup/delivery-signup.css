@@ -1,20 +1,309 @@
-.signup-container {
-  width: 350px;
-  margin: auto;
-  margin-top: 50px;
-  text-align: center;
+/* ═══════════════════════════════════════════════════
+   🛵 PREMIUM DELIVERY SIGNUP LAYOUT
+   ═══════════════════════════════════════════════════ */
+
+.vendor-signup-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-color);
+  background-image: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg-color) 100%);
+  padding: 50px 20px 100px;
 }
 
-input, select {
+.signup-card {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  max-width: 660px;
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--glass-border-subtle);
+  box-shadow: var(--card-shadow);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeInUp 0.5s var(--ease-spring);
 }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: green;
+/* ── Branding Header ── */
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: var(--primary-gradient);
   color: white;
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 12px rgba(255, 94, 54, 0.25),
+    0 0 0 3px rgba(255, 94, 54, 0.08);
+}
+
+.brand-logo {
+  color: #fff;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  color: var(--text-main);
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Form Headers ── */
+.form-header h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ── Checklist Ready Box ── */
+.checklist-box {
+  background: var(--bg-warm);
+  border: 1px solid rgba(255, 94, 54, 0.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.checklist-box h4 {
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.checklist-box ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist-box li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.check-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ── Sections & Grid Layout ── */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.form-section {
   border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--primary-color);
+  border-bottom: 1.5px solid var(--bg-warm);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: block;
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px 20px;
+}
+
+@media (min-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .full-width {
+    grid-column: span 2;
+  }
+}
+
+/* ── Form Inputs ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 11px 16px;
+  background-color: var(--surface-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--text-main);
+  transition: all var(--transition-normal);
+  font-family: var(--font-family);
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+/* Focus and hover states */
+.form-group input:hover,
+.form-group select:hover {
+  border-color: rgba(0, 0, 0, 0.16);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 94, 54, 0.08);
+  background-color: #fff;
+}
+
+/* ── Messaging Banners ── */
+.error-msg,
+.success-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.error-msg {
+  background: rgba(229, 57, 53, 0.08);
+  color: var(--danger-color);
+  border: 1px solid rgba(229, 57, 53, 0.15);
+}
+
+.success-msg {
+  background: rgba(0, 200, 81, 0.08);
+  color: var(--success-color);
+  border: 1px solid rgba(0, 200, 81, 0.15);
+}
+
+.banner-icon {
+  font-size: 14px;
+}
+
+/* ── Submit Button ── */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 94, 54, 0.2);
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--primary-gradient-hover);
+  box-shadow: 0 6px 20px rgba(255, 94, 54, 0.3);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  background: #ffab91;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* ── Animations ── */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

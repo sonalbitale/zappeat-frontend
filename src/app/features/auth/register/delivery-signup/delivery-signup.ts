@@ -29,7 +29,9 @@ export class DeliverySignup {
       password: ['', Validators.required],
       phone: ['', Validators.required],
       vehicleType: ['', Validators.required],
-      vehicleNumber: ['', Validators.required]
+      vehicleNumber: ['', Validators.required],
+      drivingLicense: ['', Validators.required],
+      aadharPan: ['', Validators.required]
     });
   }
 

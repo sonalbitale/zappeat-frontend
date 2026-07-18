@@ -1,65 +1,132 @@
 <div class="vendor-signup-page">
+  <div class="signup-card animate-fade-in">
+    
+    <!-- Branding Header -->
+    <div class="brand-wrapper">
+      <div class="brand-logo-wrap">
+        <svg class="brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="brand-info">
+        <span class="brand-name">ZappEat</span>
+        <span class="brand-subtitle">Partner Program</span>
+      </div>
+    </div>
 
-  <div class="signup-card">
-    <h2>Register Your Restaurant</h2>
-    <p class="subtitle">Join us and start selling your food online.</p>
+    <!-- Form Title -->
+    <div class="form-header">
+      <h2>Register Your Restaurant</h2>
+      <p class="subtitle">Join us and start selling your food online.</p>
+    </div>
 
+    <!-- Keep Ready Checklist -->
     <div class="checklist-box">
       <h4>Keep these ready before you start:</h4>
       <ul>
-        <li>✅ FSSAI License Number</li>
-        <!-- <li>✅ PAN Card copy</li> -->
-        <li>✅ Restaurant menu / price list</li>
-        <li>✅ Business address proof</li>
+        <li><span class="check-dot"></span> FSSAI License Number</li>
+        <li><span class="check-dot"></span> Restaurant menu / price list</li>
+        <li><span class="check-dot"></span> Business address proof</li>
       </ul>
     </div>
 
-    <form (ngSubmit)="onSubmit()" #vendorForm="ngForm">
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" #vendorForm="ngForm" class="signup-form">
 
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" name="username" [(ngModel)]="formData.username" required />
+      <!-- SECTION 1: ACCOUNT CREDENTIALS -->
+      <fieldset class="form-section">
+        <legend class="section-title">Account Details </legend>
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label>Username</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor"></span> -->
+              <input type="text" name="username" [(ngModel)]="formData.username" placeholder="e.g. spicy_bites" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor">✉️</span> -->
+              <input type="email" name="email" [(ngModel)]="formData.email" placeholder="e.g. kitchen@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor">🔒</span> -->
+              <input type="password" name="password" [(ngModel)]="formData.password" placeholder="Min 6 characters" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contact Number</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor">📞</span> -->
+              <input type="text" name="contactno" [(ngModel)]="formData.contactno" placeholder="10-digit number" required />
+            </div>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- SECTION 2: RESTAURANT DETAILS -->
+      <fieldset class="form-section">
+        <legend class="section-title">Restaurant Details</legend>
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label>Restaurant Name</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor">🏪</span> -->
+              <input type="text" name="restaurantName" [(ngModel)]="formData.restaurantName" placeholder="e.g. Spicy Hub" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>FSSAI License Number</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor">📜</span> -->
+              <input type="text" name="fssaiLicense" [(ngModel)]="formData.fssaiLicense" placeholder="14-digit license no." required />
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Business Address</label>
+            <div class="input-wrapper">
+              <!-- <span class="input-icon-decor textarea-icon">📍</span> -->
+              <textarea name="businessAddress" [(ngModel)]="formData.businessAddress" placeholder="Street name, landmark, city, state" required></textarea>
+            </div>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- Message Banners -->
+      <div class="error-msg animate-fade-in" *ngIf="errorMsg">
+        <span class="banner-icon">⚠️</span>
+        <span>{{ errorMsg }}</span>
       </div>
-
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" [(ngModel)]="formData.email" required />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" [(ngModel)]="formData.password" required />
-      </div>
-
       
-
-       <div class="form-group">
-        <label>Contact Number</label>
-        <input type="text" name="contactno" [(ngModel)]="formData.contactno" required />
-      </div>
-      <div class="form-group">
-        <label>Restaurant Name</label>
-        <input type="text" name="restaurantName" [(ngModel)]="formData.restaurantName" required />
+      <div class="success-msg animate-fade-in" *ngIf="successMsg">
+        <span class="banner-icon">🎉</span>
+        <span>{{ successMsg }}</span>
       </div>
 
-      <div class="form-group">
-        <label>FSSAI License Number</label>
-        <input type="text" name="fssaiLicense" [(ngModel)]="formData.fssaiLicense" required />
-      </div>
-
-      <div class="form-group">
-        <label>Business Address</label>
-        <textarea name="businessAddress" [(ngModel)]="formData.businessAddress" required></textarea>
-      </div>
-
-      <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
-      <div class="success-msg" *ngIf="successMsg">{{ successMsg }}</div>
-
-      <button type="submit" [disabled]="loading">
-        {{ loading ? 'Submitting...' : 'Register Restaurant' }}
+      <!-- Action Button -->
+      <button type="submit" class="submit-btn" [disabled]="loading">
+        <span *ngIf="!loading">Register Restaurant</span>
+        <div class="btn-loader" *ngIf="loading">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+          <span>Submitting Registration...</span>
+        </div>
       </button>
 
     </form>
   </div>
-
 </div>
